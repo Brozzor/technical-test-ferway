@@ -1,0 +1,38 @@
+[
+    {
+      "id": 1,
+      "listName": "My first list",
+      "cards": [
+        {
+          "id": 1,
+          "cardName": "My first card",
+          "cardDesc": "",
+          "isFollowed": false
+        },
+        {
+          "id": 2,
+          "cardName": "My second card",
+          "cardDesc": "",
+          "isFollowed": false
+        },
+        {
+          "id": 3,
+          "cardName": "My followed card",
+          "cardDesc": "",
+          "isFollowed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "listName": "My second list",
+      "cards": [
+        {
+          "id": 1,
+          "cardName": "Followed card with description",
+          "cardDesc": "Hello World !",
+          "isFollowed": true
+        }
+      ]
+    }
+  ]
