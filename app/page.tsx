@@ -19,6 +19,8 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CloseIcon from "@mui/icons-material/Close";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import NotesIcon from "@mui/icons-material/Notes";
 import { useState } from "react";
 import defaultDatas from "../data/defaultDatas.json";
 
@@ -53,7 +55,11 @@ export default function Home() {
   };
 
   const onRemoveList = (listId: number) => {
-    const isConfirmed = window.confirm("Vous allez supprimer la liste nommer " + listData.find((list) => list.id === listId)?.listName + ".\nAppuyez sur 'OK' pour continuer.\nOu sur 'Annuler' pour fermer.");
+    const isConfirmed = window.confirm(
+      "Vous allez supprimer la liste nommer " +
+        listData.find((list) => list.id === listId)?.listName +
+        ".\nAppuyez sur 'OK' pour continuer.\nOu sur 'Annuler' pour fermer."
+    );
     if (isConfirmed) {
       setListData((prevListData) =>
         prevListData.filter((list) => list.id !== listId)
@@ -110,12 +116,21 @@ export default function Home() {
                   </Typography>
                   <Grid2 container spacing={1} direction="column">
                     {list.cards.map((card) => (
-                      <Card
-                        sx={{ backgroundColor: "#ffffff" }}
-                        key={card.id}
-                      >
-                        <CardContent sx={{ padding: "10px" }}>
+                      <Card sx={{ backgroundColor: "#ffffff" }} key={card.id}>
+                        <CardContent sx={{ padding: "10px", paddingBottom: "10px !important"}}>
                           <Typography>{card.cardName}</Typography>
+                          <Grid2
+                            container
+                            spacing={1}
+                            direction="row"
+                          >
+                            {card.isFollowed ? (
+                              <VisibilityIcon fontSize="inherit"></VisibilityIcon>
+                            ) : null}
+                            {card.cardDesc ? (
+                              <NotesIcon fontSize="inherit"></NotesIcon>
+                            ) : null}
+                          </Grid2>
                         </CardContent>
                       </Card>
                     ))}
