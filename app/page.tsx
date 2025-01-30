@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import styles from "./page.module.css";
 import {
   AppBar,
   Button,
@@ -29,6 +28,11 @@ export default function Home() {
   const [addCardId, setAddCardId] = useState<number | null>(null);
   const [listData, setListData] = useState(defaultDatas);
 
+  const [isActiveAddList, setIsActiveAddList] = useState(false);
+  const [newListInputValue, setNewListInputValue] = useState("");
+
+  const [cardModalOpen, setCardModalOpen] = useState<number | null>(null);
+
   const onAddCard = (listId: number) => {
     if (!newCardInputValues.trim()) return;
     setListData((prevListData) =>
@@ -54,6 +58,20 @@ export default function Home() {
     setAddCardId(0);
   };
 
+  const onAddList = () => {
+    if (!newListInputValue.trim()) return;
+    setListData((prevListData) => [
+      ...prevListData,
+      {
+        id: new Date().getTime(),
+        listName: newListInputValue,
+        cards: [],
+      },
+    ]);
+    setNewListInputValue("");
+    setIsActiveAddList(false);
+  };
+
   const onRemoveList = (listId: number) => {
     const isConfirmed = window.confirm(
       "Vous allez supprimer la liste nommer " +
@@ -69,7 +87,7 @@ export default function Home() {
 
   return (
     <div>
-      <header className={styles.header}>
+      <header>
         <AppBar position="static" color="primary">
           <Toolbar variant="dense" sx={{ mx: "auto" }}>
             <Image
@@ -81,7 +99,7 @@ export default function Home() {
           </Toolbar>
         </AppBar>
       </header>
-      <main className={styles.main}>
+      <main>
         <Grid2
           alignItems="center"
           container
@@ -117,13 +135,14 @@ export default function Home() {
                   <Grid2 container spacing={1} direction="column">
                     {list.cards.map((card) => (
                       <Card sx={{ backgroundColor: "#ffffff" }} key={card.id}>
-                        <CardContent sx={{ padding: "10px", paddingBottom: "10px !important"}}>
+                        <CardContent
+                          sx={{
+                            padding: "10px",
+                            paddingBottom: "10px !important",
+                          }}
+                        >
                           <Typography>{card.cardName}</Typography>
-                          <Grid2
-                            container
-                            spacing={1}
-                            direction="row"
-                          >
+                          <Grid2 container spacing={1} direction="row">
                             {card.isFollowed ? (
                               <VisibilityIcon fontSize="inherit"></VisibilityIcon>
                             ) : null}
@@ -180,6 +199,52 @@ export default function Home() {
               </Card>
             </Grid2>
           ))}
+          <Grid2>
+            <Card sx={{ width: 300, backgroundColor: "#ffffff3d" }}>
+              <CardActions>
+                {!isActiveAddList ? (
+                  <Button
+                    size="small"
+                    sx={{
+                      width: "100%",
+                      textAlign: "left",
+                      justifyContent: "flex-start",
+                      color: "#fff",
+                    }}
+                    startIcon={<AddIcon />}
+                    onClick={() => setIsActiveAddList(true)}
+                  >
+                    Ajouter une autre liste
+                  </Button>
+                ) : (
+                  <Grid2>
+                    <TextField
+                      sx={{
+                        width: "100%",
+                        backgroundColor: "#ffffff",
+                        marginBottom: "5px",
+                        borderRadius: "5px",
+                      }}
+                      placeholder="Saissisez le titre de la liste"
+                      variant="outlined"
+                      value={newListInputValue || ""}
+                      onChange={(e) => setNewListInputValue(e.target.value)}
+                    />
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => onAddList()}
+                    >
+                      Ajouter une liste
+                    </Button>
+                    <IconButton>
+                      <CloseIcon onClick={() => setIsActiveAddList(false)} />
+                    </IconButton>
+                  </Grid2>
+                )}
+              </CardActions>
+            </Card>
+          </Grid2>
         </Grid2>
       </main>
     </div>
