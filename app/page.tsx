@@ -25,11 +25,12 @@ import CheckIcon from "@mui/icons-material/Check";
 import NotesIcon from "@mui/icons-material/Notes";
 import { useState } from "react";
 import defaultDatas from "../data/defaultDatas.json";
+import { useLocalStorage } from "./utils/useLocalStorage";
 
 export default function Home() {
   const [newCardInputValues, setNewCardInputValues] = useState("");
   const [addCardId, setAddCardId] = useState<number | null>(null);
-  const [listData, setListData] = useState(defaultDatas);
+  const [listData, setListData] = useLocalStorage("trello_list", defaultDatas);
 
   const [isActiveAddList, setIsActiveAddList] = useState(false);
   const [newListInputValue, setNewListInputValue] = useState("");
