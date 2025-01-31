@@ -6,22 +6,16 @@ import {
   Card,
   CardActions,
   CardContent,
-  CardMedia,
   Grid2,
   Toolbar,
   Typography,
-  TextareaAutosize,
   IconButton,
-  Input,
   TextField,
-  Modal,
-  Box,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CloseIcon from "@mui/icons-material/Close";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import CheckIcon from "@mui/icons-material/Check";
 import NotesIcon from "@mui/icons-material/Notes";
 import { useState } from "react";
 import defaultDatas from "../data/defaultDatas.json";
