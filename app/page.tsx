@@ -14,11 +14,14 @@ import {
   IconButton,
   Input,
   TextField,
+  Modal,
+  Box,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CloseIcon from "@mui/icons-material/Close";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import CheckIcon from "@mui/icons-material/Check";
 import NotesIcon from "@mui/icons-material/Notes";
 import { useState } from "react";
 import defaultDatas from "../data/defaultDatas.json";
@@ -31,7 +34,47 @@ export default function Home() {
   const [isActiveAddList, setIsActiveAddList] = useState(false);
   const [newListInputValue, setNewListInputValue] = useState("");
 
-  const [cardModalOpen, setCardModalOpen] = useState<number | null>(null);
+  const [cardModalOpen, setCardModalOpen] = useState<{
+    listName: string;
+    cardName: string;
+    newDesc: string;
+    isEditDesc: boolean;
+    listId: number;
+    cardId: number;
+  }>({
+    listId: 0,
+    cardId: 0,
+    newDesc: "",
+    listName: "",
+    cardName: "",
+    isEditDesc: false,
+  });
+
+  const onSaveModalDesc = () => {
+    setListData((prevListData) =>
+      prevListData.map((list) => {
+        if (list.id === cardModalOpen.listId) {
+          return {
+            ...list,
+            cards: list.cards.map((card) => {
+              if (card.id === cardModalOpen.cardId) {
+                return {
+                  ...card,
+                  cardDesc: cardModalOpen.newDesc,
+                };
+              }
+              return card;
+            }),
+          };
+        }
+        return list;
+      })
+    );
+    setCardModalOpen({
+      ...cardModalOpen,
+      isEditDesc: false,
+    });
+  };
 
   const onAddCard = (listId: number) => {
     if (!newCardInputValues.trim()) return;
@@ -72,17 +115,36 @@ export default function Home() {
     setIsActiveAddList(false);
   };
 
-  const onRemoveList = (listId: number) => {
+  const onRemoveElement = (listId: number, cardId: number | null) => {
     const isConfirmed = window.confirm(
       "Vous allez supprimer la liste nommer " +
         listData.find((list) => list.id === listId)?.listName +
         ".\nAppuyez sur 'OK' pour continuer.\nOu sur 'Annuler' pour fermer."
     );
-    if (isConfirmed) {
+    if (!isConfirmed) return false;
+
+    if (cardId) {
       setListData((prevListData) =>
-        prevListData.filter((list) => list.id !== listId)
+        prevListData.map((list) => {
+          if (list.id === listId) {
+            return {
+              ...list,
+              cards: list.cards.filter((card) => card.id !== cardId),
+            };
+          }
+          return list;
+        })
       );
+      return setCardModalOpen({
+        ...cardModalOpen,
+        listId: 0,
+        cardId: 0,
+      });
     }
+
+    setListData((prevListData) =>
+      prevListData.filter((list) => list.id !== listId)
+    );
   };
 
   return (
@@ -129,12 +191,27 @@ export default function Home() {
                   >
                     {list.listName}
                     <IconButton>
-                      <MoreHorizIcon onClick={() => onRemoveList(list.id)} />
+                      <MoreHorizIcon
+                        onClick={() => onRemoveElement(list.id, null)}
+                      />
                     </IconButton>
                   </Typography>
                   <Grid2 container spacing={1} direction="column">
                     {list.cards.map((card) => (
-                      <Card sx={{ backgroundColor: "#ffffff" }} key={card.id}>
+                      <Card
+                        sx={{ backgroundColor: "#ffffff", cursor: "pointer" }}
+                        key={card.id}
+                        onClick={() =>
+                          setCardModalOpen({
+                            ...cardModalOpen,
+                            cardName: card.cardName,
+                            listName: list.listName,
+                            newDesc: card.cardDesc,
+                            listId: list.id,
+                            cardId: card.id,
+                          })
+                        }
+                      >
                         <CardContent
                           sx={{
                             padding: "10px",
@@ -247,6 +324,194 @@ export default function Home() {
           </Grid2>
         </Grid2>
       </main>
+      <Modal
+        open={!!cardModalOpen.listId}
+        onClose={() =>
+          setCardModalOpen({
+            ...cardModalOpen,
+            listId: 0,
+            cardId: 0,
+          })
+        }
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 800,
+            height: 250,
+            bgcolor: "#ffffff",
+            borderRadius: "2px",
+            boxShadow: 24,
+            p: 4,
+            color: "black",
+          }}
+        >
+          <div>
+            <Typography id="modal-modal-title" variant="h6">
+              {cardModalOpen.cardName}
+            </Typography>
+            <Typography
+              id="modal-modal-description"
+              sx={{ fontSize: 14, color: "#313131" }}
+            >
+              Dans la liste <u>{cardModalOpen.listName}</u>
+            </Typography>
+          </div>
+          <Grid2
+            container
+            spacing={3}
+            direction="row"
+            sx={{ marginTop: "10px" }}
+          >
+            <Grid2
+              container
+              spacing={1}
+              direction="column"
+              sx={{ width: "70%" }}
+            >
+              <Typography variant="h6">Description</Typography>
+              {cardModalOpen.isEditDesc ? (
+                <Grid2>
+                  <TextField
+                    sx={{
+                      width: "100%",
+                      backgroundColor: "#ffffff",
+                      marginBottom: "5px",
+                    }}
+                    variant="outlined"
+                    value={cardModalOpen.newDesc || ""}
+                    onChange={(e) =>
+                      setCardModalOpen({
+                        ...cardModalOpen,
+                        newDesc: e.target.value,
+                      })
+                    }
+                  ></TextField>
+                  <Grid2>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => onSaveModalDesc()}
+                    >
+                      Enregistrer
+                    </Button>
+                    <IconButton>
+                      <CloseIcon
+                        onClick={() =>
+                          setCardModalOpen({
+                            ...cardModalOpen,
+                            isEditDesc: false,
+                          })
+                        }
+                      />
+                    </IconButton>
+                  </Grid2>
+                </Grid2>
+              ) : (
+                <TextField
+                  sx={{
+                    width: "100%",
+                    backgroundColor: "#091e420a",
+                    marginBottom: "5px",
+                  }}
+                  variant="outlined"
+                  value={cardModalOpen.newDesc || ""}
+                  onClick={() =>
+                    setCardModalOpen({
+                      ...cardModalOpen,
+                      isEditDesc: true,
+                    })
+                  }
+                ></TextField>
+              )}
+            </Grid2>
+            <Grid2
+              container
+              spacing={1}
+              direction="column"
+              sx={{ width: "25%" }}
+            >
+              <Typography variant="h6">Actions</Typography>
+              <Button
+                variant="contained"
+                sx={{
+                  width: "100%",
+                  backgroundColor: "#091e420a",
+                  color: "#313131",
+                  textAlign: "left",
+                  justifyContent: "flex-start",
+                }}
+                onClick={() =>
+                  setListData((prevListData) =>
+                    prevListData.map((list) => {
+                      if (list.id === cardModalOpen.listId) {
+                        return {
+                          ...list,
+                          cards: list.cards.map((card) => {
+                            if (card.id === cardModalOpen.cardId) {
+                              return {
+                                ...card,
+                                isFollowed: !card.isFollowed,
+                              };
+                            }
+                            return card;
+                          }),
+                        };
+                      }
+                      return list;
+                    })
+                  )
+                }
+                startIcon={<VisibilityIcon />}
+              >
+                Suivre
+                {listData
+                  .find((list) => list.id === cardModalOpen.listId)
+                  ?.cards.find((card) => card.id === cardModalOpen.cardId)
+                  ?.isFollowed ? (
+                  <span
+                    style={{
+                      WebkitBoxPack: "center",
+                      WebkitBoxAlign: "center",
+                      backgroundColor: "rgb(97, 189, 79)",
+                      height: "24px",
+                      width: "24px",
+                      borderRadius: "3px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginLeft: "auto",
+                    }}
+                  >
+                    <CheckIcon style={{ color: "white", fontSize: 17 }} />
+                  </span>
+                ) : null}
+              </Button>
+              <Button
+                variant="contained"
+                sx={{
+                  width: "100%",
+                  backgroundColor: "#091e420a",
+                  color: "#313131",
+                  textAlign: "left",
+                  justifyContent: "flex-start",
+                }}
+                onClick={() =>
+                  onRemoveElement(cardModalOpen.listId, cardModalOpen.cardId)
+                }
+                startIcon={<CloseIcon />}
+              >
+                Supprimer
+              </Button>
+            </Grid2>
+          </Grid2>
+        </Box>
+      </Modal>
     </div>
   );
 }
