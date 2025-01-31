@@ -147,6 +147,10 @@ export default function Home() {
     );
   };
 
+  const onResetData = () => {
+    setListData(defaultDatas);
+  };
+
   return (
     <div>
       <header>
@@ -169,7 +173,11 @@ export default function Home() {
           sx={{ margin: "10px" }}
         >
           <Typography variant="h1">Tableau principal</Typography>
-          <Button variant="contained" color="success">
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => onResetData()}
+          >
             Initialiser le jeu de données
           </Button>
         </Grid2>
@@ -510,6 +518,21 @@ export default function Home() {
               </Button>
             </Grid2>
           </Grid2>
+          <CloseIcon
+            sx={{
+              position: "absolute",
+              top: "10px",
+              right: "10px",
+              cursor: "pointer",
+            }}
+            onClick={() =>
+              setCardModalOpen({
+                ...cardModalOpen,
+                listId: 0,
+                cardId: 0,
+              })
+            }
+          />
         </Box>
       </Modal>
     </div>
