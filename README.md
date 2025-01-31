@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Test technique Ferway - Réalisé par Buisson Romain
 
-## Getting Started
+Ce projet a été développé en **Next 15.1.6** avec Material Ui. Il s'agit d'une application simple copiant les fonctionnalitées de base de Trello.
+![presentation](github_readme.png)
+---
 
-First, run the development server:
+## Prérequis
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js (v20.18 ou supérieur recommandé)
+- Un gestionnaire de paquets comme **npm**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Clonez ce dépôt sur votre machine locale :  
+   ```bash
+   git clone https://github.com/Brozzor/technical-test-ferway.git
+   cd technical-test-ferway
+   ```
 
-## Learn More
+2. Installez les dépendances nécessaires :
+    ```bash
+    npm install
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+3. Lancez le serveur de développement :
+    ```bash
+   npm run dev
+   ```
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Utilisation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Une fois le projet démarré, accédez à l'application via : [http://localhost:3000/](http://localhost:3000/)
 
-## Deploy on Vercel
+Vous pouvez également y accéder via cette adresse: [https://ferway-test-acdbb.web.app/](https://ferway-test-acdbb.web.app/)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Bilan
+
+### Difficultés
+1. Première expérience avec Next.js, ce qui m'a demandé un certain temps d'adaptation pour maîtriser les concepts du framework.
+2. La contrainte de temps (48 heures) pour réaliser ce projet, combinée à d'autres engagements professionnels, m'a contraint à prendre quelques raccourcis.
+
+### Réussites
+1. Prise en main assez rapide et satisfaisante du framework Next.js.
+2. J'ai particulièrement apprécié l'utilisation de Firebase, qui permet d'héberger un projet de manière simple et rapide.
+
+### Évolutions possibles
+1. Intégration d'un système de drag and drop pour permettre le déplacement des cartes.
+2. Refactorisation du code afin d'en améliorer la modularité et la lisibilité en découpant davantage les différentes parties.
